@@ -407,9 +407,8 @@ dash.calc('por_operacao', {
     if (feats.length) {
       svg.append('g').selectAll('path').data(feats).join('path')
         .attr('d', featPath).attr('fill-rule', 'evenodd')
-        .style('fill', (f) => (p.uf === f.uf ? C0 : 'var(--color-bg)'))
-        .attr('fill-opacity', (f) => (p.uf === f.uf ? 0.14 : 1))
-        .style('stroke', 'var(--cds-chart-axis)').attr('stroke-width', 0.75).attr('stroke-linejoin', 'round')
+        .style('fill', (f) => (p.uf === f.uf ? `color-mix(in srgb, ${C0} 30%, var(--color-bg))` : 'color-mix(in srgb, var(--color-fg) 12%, var(--color-bg))'))
+        .style('stroke', 'var(--color-bg)').attr('stroke-width', 1).attr('stroke-linejoin', 'round')
         .style('cursor', 'pointer')
         .classed('ae-uf', true);
       if (W >= 460) {
