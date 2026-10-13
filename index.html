@@ -18,6 +18,11 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg)}
 #dash-root{max-width:1200px;margin:0 auto;padding:24px 16px 40px}
 .dash-skeleton{opacity:.5}
 .st-foot{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--color-border-line);font:var(--cds-font-size-caption)/1.5 var(--font-anthropic-sans);color:var(--color-fg-muted);display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between}
+.st-fontes{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--color-border-line);font-family:var(--font-anthropic-sans);font-size:var(--cds-font-size-caption);line-height:1.5;color:var(--color-fg-muted)}
+.st-fontes h2{font-size:var(--cds-font-size-heading);font-weight:500;color:var(--color-fg);margin:0 0 .5rem}
+.st-fontes ul{margin:0;padding-left:1.1rem}
+.st-fontes li{margin:.25rem 0}
+.st-fontes b{color:var(--color-fg);font-weight:500}
 .st-foot button{font:inherit;color:var(--color-fg);background:transparent;border:1px solid var(--color-border-line);border-radius:8px;padding:.3rem .6rem;cursor:pointer}
 </style>
 <script>// https://d3js.org v7.9.0 Copyright 2010-2023 Mike Bostock
@@ -407,6 +412,8 @@ dash.calc('por_operacao', {
     if (feats.length) {
       svg.append('g').selectAll('path').data(feats).join('path')
         .attr('d', featPath).attr('fill-rule', 'evenodd')
+        .attr('fill', (f) => { const esc = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; return p.uf === f.uf ? (esc ? '#2e4266' : '#c9d8f2') : (esc ? '#373633' : '#e2e1de'); })
+        .attr('stroke', () => (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#1c1b19' : '#ffffff'))
         .style('fill', (f) => (p.uf === f.uf ? `color-mix(in srgb, ${C0} 30%, var(--color-bg))` : 'color-mix(in srgb, var(--color-fg) 12%, var(--color-bg))'))
         .style('stroke', 'var(--color-bg)').attr('stroke-width', 1).attr('stroke-linejoin', 'round')
         .style('cursor', 'pointer')
@@ -657,7 +664,16 @@ dash.calc('por_operacao', {
 })();
 </script>
 
-<footer class="st-foot"><span>Versão estática do painel, gerada em 12/10/2026. Dados da ANAC atualizados em 01/10/2026; limites dos estados do IBGE. Esta versão não se atualiza automaticamente.</span><button type="button" id="st-csv">Baixar dados (CSV)</button></footer>
+<section class="st-fontes" id="fontes">
+<h2>Fontes dos dados</h2>
+<ul>
+<li><b>Lista de aeródromos públicos</b> – Agência Nacional de Aviação Civil (ANAC), atualizada em 01/10/2026: nome, códigos OACI e CIAD, município, situação, operação diurna e noturna, altitude, coordenadas, validade do registro e portaria.</li>
+<li><b>Cadastro de aeródromos civis públicos</b> – Agência Nacional de Aviação Civil (ANAC), atualizado em 01/10/2026: pistas (designação, comprimento e superfície).</li>
+<li><b>Malha territorial – limites das unidades da federação</b> – Instituto Brasileiro de Geografia e Estatística (IBGE), versão simplificada.</li>
+</ul>
+<p>As bases da ANAC foram cruzadas pelo código CIAD. O estado considerado é o do município servido pelo aeródromo.</p>
+</section>
+<footer class="st-foot"><span>Versão estática do painel, gerada em 12/10/2026. Esta versão não se atualiza automaticamente.</span><button type="button" id="st-csv">Baixar dados (CSV)</button></footer>
 <script>
 document.getElementById('st-csv').addEventListener('click', function(){
   var rows = dash.data('aerodromos').data, cols = Object.keys(rows[0]);
